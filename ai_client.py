@@ -33,7 +33,25 @@ def analyze_image(image_bytes: bytes, mime_type: str) -> dict:
     image_bytes — сырые байты фото
     mime_type — например "image/jpeg" или "image/png"
     """
-    try:
+    except json.JSONDecodeError:
+        # AI ответил не в формате JSON — считаем, что фото непонятное
+        return {
+            "object_name": "неизвестно",
+            "category_code": "mixed",
+            "confidence": 0,
+            "status": "unclear_image",
+            "raw_ai_text": raw_text
+        }
+
+    except Exception as e:
+        print(f"ОШИБКА AI: {e}")
+        return {
+            "object_name": "ошибка",
+            "category_code": "mixed",
+            "confidence": 0,
+            "status": "error",
+            "raw_ai_text": str(e)
+        }
         response = client.models.generate_content(
             model="gemini-3.6-flash",
             contents=[
@@ -53,22 +71,4 @@ def analyze_image(image_bytes: bytes, mime_type: str) -> dict:
         result["raw_ai_text"] = raw_text
         return result
 
-    except json.JSONDecodeError:
-        # AI ответил не в формате JSON — считаем, что фото непонятное
-        return {
-            "object_name": "неизвестно",
-            "category_code": "mixed",
-            "confidence": 0,
-            "status": "unclear_image",
-            "raw_ai_text": raw_text
-        }
-
-        except Exception as e:
-        print(f"ОШИБКА AI: {e}")  
-        return {
-            "object_name": "ошибка",
-            "category_code": "mixed",
-            "confidence": 0,
-            "status": "error",
-            "raw_ai_text": str(e)
-        }
+      
