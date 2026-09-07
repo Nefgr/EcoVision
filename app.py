@@ -25,11 +25,11 @@ with tab2:
     if camera_photo is not None:
         uploaded_image = camera_photo
 
-# --- Показ превью и кнопка анализа ---
+
 if uploaded_image is not None:
     st.image(uploaded_image, caption="Твоё фото", use_container_width=True)
 
-    # Ограничение размера файла — не больше 10 МБ (простая проверка безопасности)
+    
     if uploaded_image.size > 10 * 1024 * 1024:
         st.error("Файл слишком большой (максимум 10 МБ). Загрузи фото меньшего размера.")
     else:
@@ -44,6 +44,7 @@ if uploaded_image is not None:
 
             if status == "error":
                 st.error("Сервис AI временно недоступен. Попробуй ещё раз чуть позже.")
+                st.caption(f"Техническая причина: {result.get('raw_ai_text')}")
 
             elif status == "unclear_image":
                 st.warning(

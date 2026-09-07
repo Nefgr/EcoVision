@@ -63,8 +63,8 @@ def analyze_image(image_bytes: bytes, mime_type: str) -> dict:
             "raw_ai_text": raw_text
         }
 
-    except Exception as e:
-        # Любая другая ошибка (нет интернета, API недоступен и т.д.)
+        except Exception as e:
+        print(f"ОШИБКА AI: {e}")  
         return {
             "object_name": "ошибка",
             "category_code": "mixed",
